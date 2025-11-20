@@ -211,7 +211,7 @@ def predict():
             data['Systolic'] = data.pop('Systolic BP')
         if 'Diastolic BP' in data:
             data['Diastolic'] = data.pop('Diastolic BP')
-
+ 
         # Fill numeric fields
         for col in NUMERIC_COLUMNS:
             if col in data:
