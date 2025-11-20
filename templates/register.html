@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Sleep Disorder Prediction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            background: #0a0e27;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        .bg-animation {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #7e22ce 50%, #be185d 75%, #fb923c 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .stars {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            width: 3px; height: 3px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+            animation: twinkle 4s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+
+        /* Register UI */
+        .register-container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+        }
+
+        .register-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 50px 40px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.4);
+            animation: slideUp 0.8s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .register-header { text-align: center; margin-bottom: 40px; }
+
+        .logo {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .register-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1e3c72 0%, #7e22ce 50%, #be185d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .register-subtitle { color: #64748b; }
+
+        .form-group { margin-bottom: 25px; }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 10px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            font-size: 1rem;
+            transition: .3s ease;
+        }
+
+        .form-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59,130,246,0.1);
+        }
+
+        .password-toggle { position: relative; }
+        .toggle-icon {
+            position: absolute; right: 20px; top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer; font-size: 1.2rem;
+            user-select: none; color: #64748b;
+        }
+
+        .password-strength {
+            margin-top: 8px;
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            display: none;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: .3s ease;
+        }
+
+        .weak .password-strength-bar { width: 33%; background: #ef4444; }
+        .medium .password-strength-bar { width: 66%; background: #f59e0b; }
+        .strong .password-strength-bar { width: 100%; background: #10b981; }
+
+        .btn-register {
+            width: 100%;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            color: white;
+            padding: 18px;
+            border-radius: 15px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .login-link {
+            text-align: center; margin-top: 20px; color: #64748b;
+        }
+
+        .login-link a { color: #3b82f6; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+<div class="bg-animation"></div>
+<div class="stars" id="stars"></div>
+
+<div class="register-container">
+    <div class="register-card">
+
+        <div class="register-header">
+            <div class="logo">🌙</div>
+            <h1 class="register-title">Create Account</h1>
+            <p class="register-subtitle">Join Sleep AI today</p>
+        </div>
+
+        {% if error %}
+        <div class="error-message">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST" action="/register">
+
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-input" minlength="3" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <div class="password-toggle">
+                    <input type="password" name="password" id="password" class="form-input" minlength="6" required oninput="checkPasswordStrength()">
+                    <span class="toggle-icon" onclick="togglePassword('password')">👁️</span>
+                </div>
+
+                <div class="password-strength" id="passwordStrength">
+                    <div class="password-strength-bar"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Confirm Password</label>
+                <div class="password-toggle">
+                    <input type="password" name="confirm_password" id="confirmPassword" class="form-input" minlength="6" required>
+                    <span class="toggle-icon" onclick="togglePassword('confirmPassword')">👁️</span>
+                </div>
+            </div>
+
+            <button class="btn-register">Create Account →</button>
+
+        </form>
+
+        <div class="login-link">
+            Already have an account? <a href="/login">Sign in</a>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Generate stars
+    const starBox = document.getElementById("stars");
+    for (let i = 0; i < 150; i++) {
+        let s = document.createElement("div");
+        s.className = "star";
+        s.style.top = Math.random()*100 + "%";
+        s.style.left = Math.random()*100 + "%";
+        s.style.animationDelay = Math.random()*4 + "s";
+        starBox.appendChild(s);
+    }
+
+    function togglePassword(id) {
+        const input = document.getElementById(id);
+        const icon = input.nextElementSibling;
+
+        if (input.type === "password") {
+            input.type = "text";
+            icon.textContent = "🙈";
+        } else {
+            input.type = "password";
+            icon.textContent = "👁️";
+        }
+    }
+
+    function checkPasswordStrength() {
+        const pass = document.getElementById("password").value;
+        const box = document.getElementById("passwordStrength");
+        const bar = box.querySelector(".password-strength-bar");
+
+        if (!pass) { box.style.display = "none"; return; }
+
+        box.style.display = "block";
+
+        let strength = 0;
+        if (pass.length >= 6) strength++;
+        if (pass.length >= 10) strength++;
+        if (/[A-Z]/.test(pass) && /[a-z]/.test(pass)) strength++;
+        if (/\d/.test(pass)) strength++;
+        if (/[^A-Za-z0-9]/.test(pass)) strength++;
+
+        box.className = "password-strength";
+
+        if (strength <= 2) box.classList.add("weak");
+        else if (strength <= 4) box.classList.add("medium");
+        else box.classList.add("strong");
+    }
+</script>
+
+</body>
+</html>

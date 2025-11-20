@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Poppins', sans-serif;
+            padding: 20px;
+        }
+        
+        .result-card {
+            max-width: 700px;
+            width: 100%;
+            background: white;
+            border-radius: 30px;
+            padding: 50px 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: zoomIn 0.6s ease;
+        }
+        
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .result-icon {
+            font-size: 100px;
+            margin-bottom: 20px;
+            animation: bounce 1s ease infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        h1 {
+            color: #2d3748;
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        
+        .prediction-result {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .prediction-result.error {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .quote-section {
+            background: #f7fafc;
+            padding: 30px;
+            border-radius: 20px;
+            margin: 30px 0;
+            border-left: 5px solid #667eea;
+        }
+        
+        .quote-text {
+            font-size: 1.1rem;
+            color: #4a5568;
+            font-style: italic;
+            line-height: 1.8;
+        }
+        
+        .quote-icon {
+            font-size: 3rem;
+            color: #667eea;
+            opacity: 0.3;
+        }
+        
+        .btn-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-custom {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+        
+        .btn-secondary-custom {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn-secondary-custom:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .info-box {
+            background: #edf2f7;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .info-box h3 {
+            color: #2d3748;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .info-box ul {
+            color: #4a5568;
+            line-height: 1.8;
+            margin-left: 20px;
+        }
+        
+        .sparkle {
+            display: inline-block;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="result-card">
+        {% if prediction == 'None' or prediction == 'Normal' %}
+            <div class="result-icon">✨</div>
+            <h1>Great News!</h1>
+        {% elif prediction == 'Error' %}
+            <div class="result-icon">⚠️</div>
+            <h1>Oops!</h1>
+        {% else %}
+            <div class="result-icon">🏥</div>
+            <h1>Analysis Complete</h1>
+        {% endif %}
+        
+        <div class="prediction-result {% if prediction == 'Error' %}error{% endif %}">
+            {% if prediction == 'None' %}
+                <span class="sparkle">🌟</span> No Sleep Disorder Detected <span class="sparkle">🌟</span>
+            {% elif prediction == 'Normal' %}
+                <span class="sparkle">🌟</span> Healthy Sleep Pattern <span class="sparkle">🌟</span>
+            {% else %}
+                {{ prediction }}
+            {% endif %}
+        </div>
+        
+        {% if prediction != 'Error' %}
+        <div class="quote-section">
+            <div class="quote-icon">"</div>
+            <p class="quote-text">{{ quote }}</p>
+        </div>
+        
+        {% if prediction == 'Insomnia' %}
+        <div class="info-box">
+            <h3>💡 Tips for Better Sleep:</h3>
+            <ul>
+                <li>Maintain a consistent sleep schedule</li>
+                <li>Create a relaxing bedtime routine</li>
+                <li>Avoid screens 1 hour before bed</li>
+                <li>Keep your bedroom cool and dark</li>
+                <li>Consider consulting a sleep specialist</li>
+            </ul>
+        </div>
+        {% elif prediction == 'Sleep Apnea' %}
+        <div class="info-box">
+            <h3>💡 Important Recommendations:</h3>
+            <ul>
+                <li>Consult a healthcare provider for proper diagnosis</li>
+                <li>Consider a sleep study</li>
+                <li>Maintain a healthy weight</li>
+                <li>Avoid alcohol before bedtime</li>
+                <li>Sleep on your side instead of your back</li>
+            </ul>
+        </div>
+        {% elif prediction == 'None' or prediction == 'Normal' %}
+        <div class="info-box">
+            <h3>💡 Keep Up the Good Work:</h3>
+            <ul>
+                <li>Continue your healthy sleep habits</li>
+                <li>Aim for 7-9 hours of sleep nightly</li>
+                <li>Stay physically active during the day</li>
+                <li>Practice stress management techniques</li>
+                <li>Monitor your sleep quality regularly</li>
+            </ul>
+        </div>
+        {% endif %}
+        {% endif %}
+<!-- FEATURE IMPORTANCE SECTION -->
+{% if feature_importance %}
+<div class="info-box" style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); border: 2px solid #667eea;">
+    <h3 style="color: #667eea; font-size: 1.4rem; text-align: center; margin-bottom: 25px;">
+        📊 Feature Importance Analysis
+    </h3>
+    <div style="overflow-x:auto;">
+        <table style="width: 100%; border-collapse: separate; border-spacing: 0 10px;">
+            <thead>
+                <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <th style="padding: 15px; text-align: left; border-radius: 10px 0 0 10px; font-weight: 600;">Feature</th>
+                    <th style="padding: 15px; text-align: center; border-radius: 0 10px 10px 0; font-weight: 600;">Importance Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for feature, score in feature_importance|dictsort(by='value', reverse=True) %}
+                <tr style="background: white; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); transition: all 0.3s ease;">
+                    <td style="padding: 15px; border-radius: 10px 0 0 10px; color: #2d3748; font-weight: 500;">{{ feature }}</td>
+                    <td style="padding: 15px; border-radius: 0 10px 10px 0; text-align: center; color: #667eea; font-weight: 600;">
+                        {{ "%.4f"|format(score) }}
+                        <div style="background: #edf2f7; height: 8px; border-radius: 5px; margin-top: 5px; overflow: hidden;">
+                            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 100%; width: {{ (score * 100)|int }}%; border-radius: 5px; transition: width 0.5s ease;"></div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+        <div class="btn-container">
+            <a href="/classify" class="btn-custom btn-primary-custom">🔄 New Analysis</a>
+            <a href="/" class="btn-custom btn-secondary-custom">🏠 Back to Home</a>
+        </div>
+        
+        {% if prediction != 'Error' %}
+        <p style="margin-top: 30px; color: #718096; font-size: 0.9rem;">
+            <strong>Disclaimer:</strong> This prediction is for informational purposes only and should not replace professional medical advice.
+        </p>
+        {% endif %}
+    </div>
+</body>
+</html>
