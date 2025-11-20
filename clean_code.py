@@ -74,15 +74,12 @@ df = pd.get_dummies(df, columns=categorical_cols, drop_first=True)
 scaler = StandardScaler()
 X = df.drop('Sleep Disorder', axis=1)
 y = df['Sleep Disorder']
-
 # Fit and transform features, save scaler
 X_scaled = scaler.fit_transform(X)
 X_scaled_df = pd.DataFrame(X_scaled, columns=X.columns)
 joblib.dump(scaler, "scaler.pkl")
-
 # Save feature column order for model deployment
 X.columns.to_series().to_csv('X_full_columns.csv', index=False, header=False)
-
 
 # -------------------------------
 # Split Dataset
